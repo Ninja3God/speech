@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Speech to Text</title>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+</head>
+
+<body>
+<div class="container">
+
+<h1 class="text-center mt-5">
+speech to text
+
+</h1>
+
+    
+
+<div class="form-group">
+
+    <textarea  id="textbox"  rows="6" class="form-control"></textarea>
+
+    <div class="from-group">
+
+<button id="start-btn" class="btn btn-danger btn-block">
+Start recording
+
+</button>
+<p id="instructions"> 
+press the  button to start recording 
+</p>
+
+<a href="" id="a">click here to download your file</a>
+<button class="btn btn-success" onclick="download('file text', 'Your recording.txt', 'text/plain')">Save the text</button>
+    </div>
+
+
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+</script>
+<script>
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+        var recognition = new SpeechRecognition();
+        var textbox = $("#textbox");
+        var instructions = $("#instructions");
+
+        var content = '';
+        recognition.continuous = true;
+
+        recognition.onstart = function () {
+            instructions.text("voice is on")
+        }
+        recognition.onspeechend = function () {
+
+            instructions.text("no activity");
+
+        }
+        recognition.onerror = function () {
+
+            instructions.text("error!!!");
+
+        }
+        recognition.onresult = function () {
+
+            var current = event.resultIndex;
+            var transcript = event.results[current][0].transcript
+            content += transcript;
+            textbox.val(content);
+
+        }
+
+        $("#start-btn").click(function (event) {
+            if (content.length) {
+                content += ''
+            }
+            recognition.start()
+        })
+    
+    function download(text, name, type) {
+        var a = document.getElementById("a");
+        var file = new Blob([content], { type: type });
+        a.href = URL.createObjectURL(file);
+        a.download = name;
+    }
+
+
+
+</script>
+</html>
